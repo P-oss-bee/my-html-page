@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2 Years</title>
+  <style>
+    body {
+      margin: 0; padding: 0;
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Arial Black', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: url('https://sf-static.upanhlaylink.com/img/image_202508074247336da8c342ed6b764f6e1fc32ea9.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    /* overlay mờ đen */
+    body::before {
+      content: '';
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 0;
+    }
+
+    .typing-container {
+      position: relative;
+      z-index: 10;
+      font-size: 4rem;
+      color: #ffcc00;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 0.15em solid #ffcc00;
+      width: 0;
+      animation: typing 4s steps(20, end) forwards, blink-caret 0.75s step-end infinite;
+      text-align: center;
+      user-select: none;
+      line-height: 1.2;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 11ch; }
+    }
+
+    @keyframes blink-caret {
+      0%, 100% { border-color: transparent; }
+      50% { border-color: #ffcc00; }
+    }
+
+    .film-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .film-row {
+      position: absolute;
+      width: 100vw;
+      height: 33.33vh;
+      display: flex;
+      align-items: center;
+      border-top: 2px solid rgba(255, 204, 0, 0.3);
+      border-bottom: 2px solid rgba(255, 204, 0, 0.3);
+    }
+
+    .film-row:nth-child(1) { top: 0; }
+    .film-row:nth-child(2) { top: 33.33vh; }
+    .film-row:nth-child(3) { top: 66.66vh; }
+
+    .film-row::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: repeating-linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.8) 0px,
+        rgba(0, 0, 0, 0.8) 20px,
+        transparent 20px,
+        transparent 40px
+      );
+      border-radius: 4px;
+    }
+
+    .film-row::after {
+      content: '';
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: repeating-linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.8) 0px,
+        rgba(0, 0, 0, 0.8) 20px,
+        transparent 20px,
+        transparent 40px
+      );
+      border-radius: 4px;
+    }
+
+    .film-image {
+      position: absolute;
+      width: 220px;
+      height: 130px;
+      opacity: 0;
+      border-radius: 12px;
+      border: 3px solid #000;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+      user-select: none;
+      transition: opacity 1s ease-in-out;
+      object-fit: cover;
+    }
+
+    audio {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 15;
+      outline: none;
+      opacity: 0;
+    }
+
+    .music-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 20;
+      background: rgba(255, 204, 0, 0.8);
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      cursor: pointer;
+      display: none;
+    }
+
+    /* Thank you screen */
+    .thanku-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 25;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .thanku-text {
+      font-size: 1.5rem;
+      color: #ffcc00;
+      max-width: 900px;
+      text-align: center;
+      line-height: 1.6;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      white-space: pre-wrap;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    @media (max-width: 768px) {
+      .thanku-text {
+        font-size: 1.2rem;
+        padding: 20px;
+      }
+    }
+
+    /* Final credits screen */
+    .credits-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 30;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+    }
+
+    .credits-text {
+      text-align: center;
+      color: #ffcc00;
+      margin-bottom: 30px;
+    }
+
+    .credits-text h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 20px;
+      letter-spacing: 0.1em;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .credits-text p {
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: #fff;
+      opacity: 0.9;
+      letter-spacing: 0.05em;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .final-images {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 80vw;
+      margin-top: 30px;
+    }
+
+    .final-images img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 3px solid #ffcc00;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 1s ease-in-out;
+    }
+
+    .final-images img.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+  <div id="typingText" class="typing-container"></div>
+  
+  <!-- Film strip container -->
+  <div class="film-container" id="filmContainer">
+    <div class="film-row" data-row="0"></div>
+    <div class="film-row" data-row="1"></div>
+    <div class="film-row" data-row="2"></div>
+  </div>
+  
+  <button class="music-button" id="musicButton" onclick="playMusic()">🎵</button>
+
+  <!-- Thank you Screen -->
+  <div class="thanku-screen" id="thankuScreen">
+    <div class="thanku-text" id="thankuText"></div>
+  </div>
+
+  <!-- Credits Screen -->
+  <div class="credits-screen" id="creditsScreen">
+    <div class="credits-text">
+      <h1>Directed by Vicky</h1>
+      <p>With love and memories</p>
+    </div>
+    <div class="final-images" id="finalImages"></div>
+  </div>
+
+  <audio id="bgMusic" loop>
+    <source src="https://c1-ex-swe.nixcdn.com/Believe_Audio48/PhaoHoaSpeedUpVersion-PhiPhuongAnhRIN9MiiNa-7456481.mp3?st=eqQFrffGV4rqUAgLVFoXKw&e=1755230089&a=1&p=0&r=d87bd28389169c76a3c858d046edb628&download=true" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const typingText = document.getElementById('typingText');
+    const filmContainer = document.getElementById('filmContainer');
+    const bgMusic = document.getElementById('bgMusic');
+    const musicButton = document.getElementById('musicButton');
+    const thankuScreen = document.getElementById('thankuScreen');
+    const thankuText = document.getElementById('thankuText');
+    const creditsScreen = document.getElementById('creditsScreen');
+    const finalImages = document.getElementById('finalImages');
+    const filmRows = document.querySelectorAll('.film-row');
+
+    const text = "2 Years,..\nJuly 2023";
+    let idx = 0;
+
+    // Tự động phát nhạc ngay khi load trang
+    function autoPlayMusic() {
+      bgMusic.volume = 0;
+      bgMusic.muted = false;
+      
+      const playPromise = bgMusic.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          console.log('Music started silently');
+        }).catch(error => {
+          console.log('Autoplay failed, trying alternative:', error);
+          document.addEventListener('click', forcePlayMusic, { once: true });
+          document.addEventListener('touchstart', forcePlayMusic, { once: true });
+          musicButton.style.display = 'block';
+        });
+      }
+    }
+
+    function forcePlayMusic() {
+      bgMusic.volume = 0;
+      bgMusic.play().then(() => {
+        console.log('Music force started');
+        musicButton.style.display = 'none';
+      }).catch(e => console.log('Force play failed:', e));
+    }
+
+    function enableMusicVolume() {
+      if (!bgMusic.paused) {
+        bgMusic.volume = 0.7;
+        console.log('Music volume enabled');
+      } else {
+        bgMusic.volume = 0.7;
+        bgMusic.play().catch(e => {
+          console.log('Failed to play music with volume:', e);
+          musicButton.style.display = 'block';
+        });
+      }
+    }
+
+    function playMusic() {
+      bgMusic.play();
+      bgMusic.volume = 0.7;
+      musicButton.style.display = 'none';
+    }
+
+    function typeEffect() {
+      if (idx < text.length) {
+        typingText.innerHTML += (text[idx] === '\n') ? '<br>' : text[idx];
+        idx++;
+        setTimeout(typeEffect, 150);
+      } else {
+        enableMusicVolume();
+        setTimeout(startFilmStrip, 1000);
+      }
+    }
+
+    // Tất cả ảnh
+    const allImages = [
+      "https://sf-static.upanhlaylink.com/img/image_2025080779f5f4fe49874d18b39962b5dbf184ab.jpg", "https://sf-static.upanhlaylink.com/img/image_202508078926f42b95efc6d6edb5a1667dc44d81.jpg", "https://sf-static.upanhlaylink.com/img/image_202508079f4bc81f76255f0c64e0fdaf0b122351.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080727c525c7341b47ada3f6f70e3b66d2e4.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080760353bce58255f6965ebd4d99cf6acbc.jpg", "https://sf-static.upanhlaylink.com/img/image_20250807c89c2184ce903e95168317127b318d30.jpg", "https://sf-static.upanhlaylink.com/img/image_202508084c3c74ab3cde30122f3da78d346f65f4.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080811a598cc76c18a6f2a95b7dee6dfd462.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808d9933768242a29d37f3b2b94314803d5.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808e77f410434b92305cbe5c861206e0967.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808a40e12392d0056de0a6a7421424acb65.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808c68acc21a432199bb6a0a0e29c62ea07.jpg", "https://sf-static.upanhlaylink.com/img/image_202508088817884a3a2a9eca8d5cf679daa9e6e8.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808771565241e67921920a7e4d5b436c2cb.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808bea7edb31d0db1c24b77723afd3af1f3.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808bfe9be41bc975bda84411f02546ee3d4.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080860ef2cf3ff59552c9cd93c621e265228.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080868a3a75e0dcfd808befc3eec06357087.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808381fb73e1627a75b8900b38ebd30b65c.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080807a91c9a1a863477f44088200ea0d1ff.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808a18d0c24785023a5bba3a003bf96fd19.jpg", "https://sf-static.upanhlaylink.com/img/image_202508081286adc6d59931d8e0b38959ca842f62.jpg", "https://sf-static.upanhlaylink.com/img/image_202508089df29d756b5658508f92aa874079a1a5.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808f3a892def5386f440a81f0bbde24e2bc.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080828c89cdf72de717fa075c484d13407a4.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808efeab85310c3ad81fe510cbb38ca9eb2.jpg", "https://sf-static.upanhlaylink.com/img/image_202508087d4695c3d1124e713b2a8cd7fe8d6b75.jpg", "https://sf-static.upanhlaylink.com/img/image_202508084f089ad708d3c63ce8ef90b89436444d.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808333740258c8edf14c8cf40c2ba6f9974.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808e4d19a289ea0acb096ad3bf75d5c0dbc.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808a5a20c9af597efe1b34c2861ede62950.jpg", "https://sf-static.upanhlaylink.com/img/image_202508087d490e8000be6b765f2f7c26060e90f2.jpg", "https://sf-static.upanhlaylink.com/img/image_202508080b82a27959750b1d550670c8c515643d.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080730a16fcd174be4e271cd5c008cc30e86.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808d22e3e78fbe6066a21aa2d456829da58.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808746e1ba5039eab27943aa4a60070ad8f.jpg", "https://sf-static.upanhlaylink.com/img/image_202508083e32264cb9b13143328089401c05060b.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808dfba6d0725225d97f9f73c8d753cccac.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080809d6d7008064995d053443c90079c2b2.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808e00b2a76b32d8fe2815632510d2ac018.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080808a3ce17a7bee143c3422ef19881235b.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808e5459d777ac03dfcce5fc678b18a0ca3.jpg", "https://sf-static.upanhlaylink.com/img/image_202508089616e1664b9598a00d818e2d61cb20b2.jpg", "https://sf-static.upanhlaylink.com/img/image_202508087b0d205e46ebefe75a947e18545e342b.jpg", "https://sf-static.upanhlaylink.com/img/image_202508082c2433760290b6ec672d2c0c40a156a7.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080845d56a5febf4b763ac7fff8719995567.jpg", "https://sf-static.upanhlaylink.com/img/image_202508087a865ceb4a7b25d868251f738fbfb750.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808e5947d3b1408ce29d427c3db9964f0bd.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808316423f4be8c022c5da54de9f1cce51e.jpg", "https://sf-static.upanhlaylink.com/img/image_202508083622a34eed1ac8b3f66ccf2c4916fba1.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808eb7360335234f4a70747bd97335d3de4.jpg", "https://sf-static.upanhlaylink.com/img/image_202508083772667591395c896b00c3fa707893ba.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808827422d18fa4930771952e149b8af7c6.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808e1342ada7100f2783598eec07a3792a0.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808ae45170e33380fba918c639ac50ab5d8.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080847be908e527eded70c7736f48dac950b.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808132d6018a168093a3e4a29818472d9e7.jpg", "https://sf-static.upanhlaylink.com/img/image_202508082cd26b43215904064d24743a36b31eaa.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808ad5daa6c0c3db351f65738d10f644054.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080863d475d21fcdc18dd41927b0b3fd95f6.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080856da9b3794f380c35d0ffaba0c0d0150.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808cb07112a14a21c35d3d869549fc7d791.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080886e7e58a886cc54459deae323cf8167a.jpg", "https://sf-static.upanhlaylink.com/img/image_202508086a11b733602ea864cd7e22d4f055bf48.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808760aec1ed12af578af5cca0ac0dbc3a1.jpg", "https://sf-static.upanhlaylink.com/img/image_202508081b30a8ccd383945889a6b9624b46a945.jpg", "https://sf-static.upanhlaylink.com/img/image_202508088d18c7cc932fab99520ffa773404b2b6.jpg",
+      "https://sf-static.upanhlaylink.com/img/image_202508086251d0bab711fca89e4e60511d77da87.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080881f80a4963fc38d807255edeeabf883a.jpg", "https://sf-static.upanhlaylink.com/img/image_2025080849cc4757b867ac77c0fdcff941991efd.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808c9c9782d81309fd331cb89146a3ad9d1.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808089eff008ea75bc51bf183054bcd87aa.jpg", "https://sf-static.upanhlaylink.com/img/image_202508080de09b587ec0b00418548b07b5136dc2.jpg", "https://sf-static.upanhlaylink.com/img/image_20250808ac6727d5afb910d51145ab01bb7757a2.jpg"
+    ];
+    
+    function createFilmImage(src, rowIndex) {
+      const img = document.createElement('img');
+      img.src = src;
+      img.className = 'film-image';
+      
+      const row = filmRows[rowIndex];
+      const isLeftToRight = rowIndex % 2 === 0;
+      
+      if (isLeftToRight) {
+        img.style.left = '-250px';
+      } else {
+        img.style.left = window.innerWidth + 'px';
+      }
+      
+      img.style.top = '50%';
+      img.style.transform = 'translateY(-50%)';
+      img.style.opacity = 0;
+      
+      row.appendChild(img);
+      
+      setTimeout(() => { img.style.opacity = 1; }, 100);
+      
+      const speed = isLeftToRight ? 1.5 : -1.5;
+      let posX = parseInt(img.style.left);
+      
+      function move() {
+        posX += speed;
+        img.style.left = posX + 'px';
+        
+        if ((isLeftToRight && posX > window.innerWidth + 250) || 
+            (!isLeftToRight && posX < -250)) {
+          img.style.opacity = 0;
+          setTimeout(() => {
+            if (img.parentNode) img.parentNode.removeChild(img);
+          }, 1000);
+        } else {
+          requestAnimationFrame(move);
+        }
+      }
+      requestAnimationFrame(move);
+    }
+
+    // === PHẦN CODE ĐÃ SỬA LỖI ===
+    function startFilmStrip() {
+        typingText.style.display = 'none';
+
+        const totalImages = allImages.length;
+        // Khoảng cách thời gian giữa mỗi ảnh xuất hiện (miligiây)
+        const spawnInterval = 3000;
+        // Thời gian chờ để bắt đầu hàng tiếp theo
+        const rowStaggerDelay = 5000;
+        
+        // --- THAY ĐỔI CHÍNH Ở ĐÂY ---
+        // Thời gian chờ sau khi ảnh cuối cùng xuất hiện trước khi chuyển cảnh.
+        // Đặt giá trị nhỏ (vd: 2000ms = 2 giây) để chuyển cảnh nhanh.
+        const delayAfterLastImageAppears = 2000;
+
+        function spawnImagesInRow(rowIndex) {
+            allImages.forEach((src, index) => {
+                setTimeout(() => {
+                    createFilmImage(src, rowIndex);
+                }, index * spawnInterval);
+            });
+        }
+
+        // Bắt đầu tạo ảnh cho từng hàng, có độ trễ giữa các hàng
+        spawnImagesInRow(0);
+        setTimeout(() => spawnImagesInRow(1), rowStaggerDelay);
+        setTimeout(() => spawnImagesInRow(2), rowStaggerDelay * 2);
+
+        // Thời điểm ảnh cuối cùng bắt đầu xuất hiện
+        const lastImageStartTime = (rowStaggerDelay * 2) + ((totalImages - 1) * spawnInterval);
+        
+        // Tổng thời gian = thời điểm ảnh cuối xuất hiện + một khoảng chờ ngắn
+        const totalDuration = lastImageStartTime + delayAfterLastImageAppears;
+
+        // Hẹn giờ để hiển thị màn hình cảm ơn
+        setTimeout(showThankYou, totalDuration);
+    }
+
+
+    function showThankYou() {
+      bgMusic.pause();
+      filmContainer.style.display = 'none';
+      
+      thankuScreen.style.display = 'flex';
+      
+      const thankMessage = "Cảm ơn gia đình Vĩnh Long của Mít đã luôn yêu thương và đồng hành cùng nhau ạ. Thời gian gia đình mình ở bên nhau không đủ dài nhưng đủ hiểu, đồng cảm và chia sẻ cùng nhau những niềm vui, hạnh phúc, khó khăn, động viên nhau và đến tận bây giờ vẫn vậy. Sau này dù mỗi người một hành trình mới, niềm vui mới, những có lẽ những khoảnh khắc, kỉ niệm, cuộc gặp gỡ của Mít với gia đình thân yêu của mình, Mít sẽ mãi mãi luôn trân trọng và nhớ mãi ạ. Cảm ơn mọi người đã đến và mang lại cho mít thật nhiều yêu thương, niềm vui và sự sẻ chia ạ!\n\nLove u all ❤️";
+      
+      let thankIdx = 0;
+      thankuText.innerHTML = '';
+      
+      function typeThankMessage() {
+        if (thankIdx < thankMessage.length) {
+          if (thankMessage[thankIdx] === '\n') {
+            thankuText.innerHTML += '<br>';
+          } else {
+            thankuText.innerHTML += thankMessage[thankIdx];
+          }
+          thankIdx++;
+          setTimeout(typeThankMessage, 80);
+        } else {
+          setTimeout(showCredits, 3000);
+        }
+      }
+      
+      setTimeout(typeThankMessage, 500);
+    }
+
+    function showCredits() {
+      thankuScreen.style.display = 'none';
+      creditsScreen.style.display = 'flex';
+      
+      setTimeout(() => {
+        creditsScreen.style.opacity = 1;
+      }, 100);
+
+      const uniqueImages = [
+        "https://sf-static.upanhlaylink.com/img/image_202508088817884a3a2a9eca8d5cf679daa9e6e8.jpg",
+        "https://sf-static.upanhlaylink.com/img/image_20250808d9933768242a29d37f3b2b94314803d5.jpg",
+        "https://sf-static.upanhlaylink.com/img/image_2025080807a91c9a1a863477f44088200ea0d1ff.jpg",
+        "https://sf-static.upanhlaylink.com/img/image_202508074247336da8c342ed6b764f6e1fc32ea9.jpg",
+        "https://sf-static.upanhlaylink.com/img/image_20250807ecfc84733279d8118d41a7ac36d1a2dd.jpg",
+        "https://sf-static.upanhlaylink.com/img/image_2025080749c230163a0bb9718de297455ab08898.jpg"
+      ];
+      
+      uniqueImages.forEach((src, index) => {
+        const img = document.createElement('img');
+        img.src = src;
+        finalImages.appendChild(img);
+        
+        setTimeout(() => {
+          img.classList.add('show');
+        }, index * 200);
+      });
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        autoPlayMusic();
+        typeEffect();
+      }, 500);
+    });
+
+    document.addEventListener('click', () => {
+      if (bgMusic.paused) {
+        forcePlayMusic();
+      }
+    }, { once: true });
+
+    document.addEventListener('keydown', () => {
+      if (bgMusic.paused) {
+        forcePlayMusic();
+      }
+    }, { once: true });
+
+    document.addEventListener('touchstart', () => {
+      if (bgMusic.paused) {
+        forcePlayMusic();
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>
